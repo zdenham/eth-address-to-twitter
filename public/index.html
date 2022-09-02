@@ -3,7 +3,6 @@
   <head>
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="half">
@@ -29,10 +28,33 @@
     </div>
     <div class="secondHalf">
       <h1>Paste a List of Eth Addresses Below</h1>
-      <textarea class="json"></textarea>
+      <p>Please make sure they are comma separated, valid eth addresses</p>
+      <textarea
+        class="json"
+        placeholder="e.g. 0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0x5b76f5b8fc9d700624f78208132f91ad4e61a1f0"
+      ></textarea>
+      <button id="doThingButton">Do The Thing</button>
     </div>
 
-    <script type="module"></script>
+    <script type="module">
+      document
+        .getElementById('doThingButton')
+        .addEventListener('click', async (e) => {
+          const valuesStr =
+            e.target.value ||
+            '0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0x5b76f5b8fc9d700624f78208132f91ad4e61a1f0';
+
+          const addresses = valuesStr.split(',');
+
+          await fetch('/do-the-thing', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ addresses }),
+          });
+        });
+    </script>
 
     <style>
       html,
@@ -104,6 +126,19 @@
         border-radius: 15px;
         border: 1px solid lightgrey;
         box-sizing: border-box;
+      }
+
+      button {
+        background: #1da1f2;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        padding: 12px 35px;
+        font-weight: bold;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        margin: 25px 0px;
       }
     </style>
   </body>
