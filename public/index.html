@@ -48,6 +48,7 @@
       const addressInput = document.getElementById('addressInput');
 
       doThingButton.addEventListener('click', async () => {
+        handlesList.innerHTML = '';
         doThingButton.innerText =
           'Loading... This can take time, maybe have some 🍵';
 
