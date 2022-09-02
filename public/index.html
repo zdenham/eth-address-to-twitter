@@ -1,32 +1,56 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Twitter ENS Demo</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="half">
+      <div class="imageWrapper">
+        <img
+          class="twitterImage"
+          src="https://www.freepnglogos.com/uploads/twitter-logo-png/twitter-bird-symbols-png-logo-0.png"
+        />
+      </div>
       <h1 class="mainText">
-        RipDB is a dead simple, fast, decentralized <br />
-        JSON store built for web3.
+        Simple way to get twitter handles from ethereum addresses.
       </h1>
-      <p class="sub">Twitter ENS Lookup</p>
       <div class="fixed-pos">
         Made with ❤️ by&nbsp;
         <a
           target="_blank"
           href="https://twitter.com/zac_denham"
-          style="color: #1da1f2"
+          style="color: yellow"
         >
           @zac_denham </a
-        >&nbsp; at hack.fs '22
+        >&nbsp;for fun!
       </div>
+    </div>
+    <div class="secondHalf">
+      <h1>Paste a List of Eth Addresses Below</h1>
+      <textarea class="json"></textarea>
     </div>
 
     <script type="module"></script>
 
     <style>
+      html,
+      body {
+        font-family: 'Roboto', sans-serif;
+      }
+
+      .twitterImage {
+        width: 100px;
+        height: 100px;
+      }
+
+      .imageWrapper {
+        padding: 30px;
+        border-radius: 30px;
+        background: white;
+      }
+
       .sub {
         font-size: 22px;
         color: white;
@@ -37,6 +61,21 @@
         margin-top: 50px;
         width: 700px;
         text-align: center;
+      }
+
+      .half {
+        color: white;
+        width: 50vw;
+        height: 100vh;
+        position: fixed;
+        flex-direction: column;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        background: #1da1f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .secondHalf {
@@ -52,6 +91,18 @@
         flex-direction: column;
         padding: 50px;
         color: black;
+        box-sizing: border-box;
+      }
+
+      .json {
+        width: 100%;
+        height: 500px;
+        min-height: 500px;
+        color: black;
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 15px;
+        border: 1px solid lightgrey;
         box-sizing: border-box;
       }
     </style>
