@@ -14,7 +14,7 @@ const twitterClient = new TwitterClient({
 const BATCH_SIZE = 10;
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 app.use(express.static('public'));
 app.use(cors());
