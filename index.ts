@@ -11,7 +11,7 @@ const twitterClient = new TwitterClient({
   accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET || '',
 });
 
-const BATCH_SIZE = 5;
+const BATCH_SIZE = 10;
 
 const app = express();
 const port = 4000;
@@ -61,9 +61,11 @@ app.post('/do-the-thing', async (req, res) => {
 
   // finish off the last of em
   const newHandles = await Promise.all(allPromises);
-  handles = [...handles, ...newHandles].filter((handle) => !!handle);
+  const twitterHandles = [...handles, ...newHandles]
+    .map((handle, i) => ({ handle, address: addresses[i] }))
+    .filter(({ handle }) => !!handle);
 
-  res.send({ handles });
+  res.send({ twitterHandles });
 });
 
 app.listen(port, () => {

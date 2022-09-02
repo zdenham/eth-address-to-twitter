@@ -39,7 +39,7 @@
         Results will populate below once the thing is done. Addresses where no
         strong match is found will be skipped.
       </p>
-      <div id="handlesList"></div>
+      <ol id="handlesList"></ol>
     </div>
 
     <script type="module">
@@ -65,15 +65,26 @@
           body: JSON.stringify({ addresses }),
         });
 
-        const { handles } = await res.json();
+        const { twitterHandles } = await res.json();
 
-        for (let handle of handles) {
-          const handleEl = document.createElement('a');
-          handleEl.target = '_blank';
-          handleEl.className = 'linkItem';
-          handleEl.innerText = `https://twitter.com/${handle}`;
-          handleEl.href = `https://twitter.com/${handle}`;
-          handlesList.append(handleEl);
+        for (let handle of twitterHandles) {
+          const handleLinkEl = document.createElement('a');
+          const addressEl = document.createElement('a');
+          const listItem = document.createElement('li');
+
+          addressEl.className = 'address';
+          addressEl.innerText = handle.address;
+          addressEl.target = '_blank';
+          addressEl.href = `https://etherscan.io/address${handle.address}`;
+
+          handleLinkEl.target = '_blank';
+          handleLinkEl.className = 'linkItem';
+          handleLinkEl.innerText = `https://twitter.com/${handle.handle}`;
+          handleLinkEl.href = `https://twitter.com/${handle.handle}`;
+
+          listItem.append(addressEl);
+          listItem.append(handleLinkEl);
+          handlesList.append(listItem);
         }
 
         doThingButton.innerText = 'Do The Thing Again';
@@ -93,7 +104,8 @@
 
       .linkItem {
         color: #1da1f2;
-        margin: 5px;
+        margin: 10px;
+        font-size: 16px;
       }
 
       .imageWrapper {
@@ -168,6 +180,27 @@
         border: none;
         cursor: pointer;
         margin: 25px 0px;
+      }
+
+      .address {
+        font-family: monospace;
+        color: black;
+        padding-right: 10px;
+        margin: 10px;
+        font-size: 16px;
+      }
+
+      li {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      ol {
+        padding: 0px;
+        padding-top: 15px;
       }
     </style>
   </body>
