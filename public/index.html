@@ -34,26 +34,34 @@
         placeholder="e.g. 0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0x5b76f5b8fc9d700624f78208132f91ad4e61a1f0"
       ></textarea>
       <button id="doThingButton">Do The Thing</button>
+      <div id="handlesList"></div>
     </div>
 
     <script type="module">
-      document
-        .getElementById('doThingButton')
-        .addEventListener('click', async (e) => {
-          const valuesStr =
-            e.target.value ||
-            '0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0x5b76f5b8fc9d700624f78208132f91ad4e61a1f0';
+      const doThingButton = document.getElementById('doThingButton');
+      const handlesList = document.getElementById('handlesList');
 
-          const addresses = valuesStr.split(',');
+      doThingButton.addEventListener('click', async (e) => {
+        doThingButton.innerText =
+          'Loading... This can take time, maybe have some 🍵';
+        const valuesStr =
+          e.target.value ||
+          '0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0x5b76f5b8fc9d700624f78208132f91ad4e61a1f0';
 
-          await fetch('/do-the-thing', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ addresses }),
-          });
+        const addresses = valuesStr.split(',');
+
+        const res = await fetch('/do-the-thing', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ addresses }),
         });
+
+        const { handles } = await res.json();
+
+        doThingButton.innerText = 'Do The Thing Again';
+      });
     </script>
 
     <style>
@@ -65,6 +73,10 @@
       .twitterImage {
         width: 100px;
         height: 100px;
+      }
+
+      .linkItem {
+        color: #1da1f2;
       }
 
       .imageWrapper {

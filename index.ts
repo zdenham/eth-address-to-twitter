@@ -2,11 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { ethers } from 'ethers';
+import { TwitterClient } from 'twitter-api-client';
+
+const twitterClient = new TwitterClient({
+  apiKey: process.env.TWITTER_API_KEY || '',
+  apiSecret: process.env.TWITTER_SECRET || '',
+  accessToken: process.env.TWITTER_ACCESS_TOKEN || '',
+  accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET || '',
+});
 
 const BATCH_SIZE = 5;
 
 const app = express();
-
 const port = 4000;
 
 app.use(express.static('public'));
@@ -18,16 +25,27 @@ const provider = new ethers.providers.JsonRpcProvider(
 );
 
 const getTwitterFromEthAddress = async (address: string) => {
-  const lookup = await provider.lookupAddress(address);
-  console.log('THE LOOK UP: ', lookup);
+  const ens = await provider.lookupAddress(address);
+  if (!ens) {
+    return '';
+  }
 
-  return '';
+  const data = await twitterClient.accountsAndUsers.usersSearch({
+    q: ens,
+    count: 1,
+  });
+
+  if (!data.length) {
+    return '';
+  }
+
+  return data[0].screen_name;
 };
 
 app.post('/do-the-thing', async (req, res) => {
   const { addresses } = req.body;
   let handles: string[] = [];
-  const allPromises: Promise<string>[] = [];
+  let allPromises: Promise<string>[] = [];
   let i = 0;
   for (let address of addresses) {
     allPromises.push(getTwitterFromEthAddress(address));
@@ -35,10 +53,13 @@ app.post('/do-the-thing', async (req, res) => {
     if (i % BATCH_SIZE === 0) {
       const newHandles = await Promise.all(allPromises);
       handles = [...handles, ...newHandles];
+      allPromises = [];
     }
   }
 
-  handles = handles.filter((handle) => !!handle);
+  // finish off the last of em
+  const newHandles = await Promise.all(allPromises);
+  handles = [...handles, ...newHandles].filter((handle) => !!handle);
 
   res.send({ body: JSON.stringify({ handles }) });
 });
