@@ -26,6 +26,7 @@ const provider = new ethers.providers.JsonRpcProvider(
 
 const getTwitterFromEthAddress = async (address: string) => {
   const ens = await provider.lookupAddress(address);
+  console.log('ENS: ', ens);
   if (!ens) {
     return '';
   }
@@ -35,6 +36,7 @@ const getTwitterFromEthAddress = async (address: string) => {
     count: 1,
   });
 
+  // TODO more validation
   if (!data.length) {
     return '';
   }
@@ -61,7 +63,7 @@ app.post('/do-the-thing', async (req, res) => {
   const newHandles = await Promise.all(allPromises);
   handles = [...handles, ...newHandles].filter((handle) => !!handle);
 
-  res.send({ body: JSON.stringify({ handles }) });
+  res.send({ handles });
 });
 
 app.listen(port, () => {

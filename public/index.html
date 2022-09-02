@@ -21,8 +21,7 @@
           target="_blank"
           href="https://twitter.com/zac_denham"
           style="color: yellow"
-        >
-          @zac_denham </a
+          >0x0319beF73Dc97B79cB90b3D2FdFB88C7A8FB58eD</a
         >&nbsp;for fun!
       </div>
     </div>
@@ -30,22 +29,30 @@
       <h1>Paste a List of Eth Addresses Below</h1>
       <p>Please make sure they are comma separated, valid eth addresses</p>
       <textarea
+        id="addressInput"
         class="json"
         placeholder="e.g. 0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0x5b76f5b8fc9d700624f78208132f91ad4e61a1f0"
       ></textarea>
       <button id="doThingButton">Do The Thing</button>
+      <h1>Results:</h1>
+      <p>
+        Results will populate below once the thing is done. Addresses where no
+        strong match is found will be skipped.
+      </p>
       <div id="handlesList"></div>
     </div>
 
     <script type="module">
       const doThingButton = document.getElementById('doThingButton');
       const handlesList = document.getElementById('handlesList');
+      const addressInput = document.getElementById('addressInput');
 
-      doThingButton.addEventListener('click', async (e) => {
+      doThingButton.addEventListener('click', async () => {
         doThingButton.innerText =
           'Loading... This can take time, maybe have some 🍵';
+
         const valuesStr =
-          e.target.value ||
+          addressInput.value.trim() ||
           '0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0x5b76f5b8fc9d700624f78208132f91ad4e61a1f0';
 
         const addresses = valuesStr.split(',');
@@ -59,6 +66,15 @@
         });
 
         const { handles } = await res.json();
+
+        for (let handle of handles) {
+          const handleEl = document.createElement('a');
+          handleEl.target = '_blank';
+          handleEl.className = 'linkItem';
+          handleEl.innerText = `https://twitter.com/${handle}`;
+          handleEl.href = `https://twitter.com/${handle}`;
+          handlesList.append(handleEl);
+        }
 
         doThingButton.innerText = 'Do The Thing Again';
       });
@@ -77,6 +93,7 @@
 
       .linkItem {
         color: #1da1f2;
+        margin: 5px;
       }
 
       .imageWrapper {
@@ -130,8 +147,8 @@
 
       .json {
         width: 100%;
-        height: 500px;
-        min-height: 500px;
+        height: 250px;
+        min-height: 250px;
         color: black;
         background: #f9f9f9;
         padding: 15px;
